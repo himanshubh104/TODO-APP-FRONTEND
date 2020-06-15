@@ -1,45 +1,46 @@
 import React,{useState, useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import axios from "axios";
 import { useSelector,useDispatch } from "react-redux";
+import { signIn } from '../redux/Action';
+import { toast } from 'react-toastify';
 
 function Login(props) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState({})
+    const [credentials, setCredentials] = useState({userName:'',userPassword:''});
+    const response = useSelector(state=>state)
+    const dispatcher=useDispatch();
     const history=useHistory();
 
     const handleClicke=(e) => {      
         history.push('/signup');
-        /* console.log('Called Logout');
-        axios.get("http://localhost:8080/todo-app/users/logout",{withCredentials:true
-        })
-        .then(resp=>{
-            console.log(resp.data);
-        }).catch(err=>console.log(err)) */
      }
 
     const handleSubmit=(e)=>{
         e.preventDefault();
         setLoading(true);
-        setUser({...user,userName:name,userPassword:password}); 
+        setCredentials({...credentials,userName:name,userPassword:password}); 
     }
 
     useEffect(() => {
-        if (Object.keys(user).length !== 0) {
-            axios.post("http://localhost:8080/todo-app/users/",user,{withCredentials:true
-            })
-            .then(resp=>{
-                console.log(resp.data);
-                setLoading(false);
-                history.replace("/todo");
-            }).catch(err=>{
-                console.log(err);
-                setLoading(false);
-            })
+        if (credentials.userName !== '') {
+            dispatcher(signIn(credentials))
         }
-    }, [user,history])
+    }, [credentials,dispatcher])
+
+    useEffect(()=>{
+        if (response.authenticated===true) {
+            console.log(response.user);
+            setLoading(false);
+            history.replace("/todo");
+        }
+        else if (response.error!=='') {
+            // console.log(response.error);
+            toast.error(response.error)
+            setLoading(false);
+        }
+    },[response,history])
 
     return (
         <div>

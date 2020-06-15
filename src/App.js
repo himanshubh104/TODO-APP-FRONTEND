@@ -1,7 +1,6 @@
 import React from "react";
 import './App.css';
-// import Login from './components/Login';
-import Login from './components/LoginUsingRedux';
+import Login from './components/Login';
 import Todo from './components/Todo';
 import {Switch,Route, Redirect} from 'react-router-dom';
 import Signup from "./components/Signup";
