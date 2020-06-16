@@ -24,7 +24,7 @@ const userError=(error)=>{
     }
 }
 
-export const signOut=()=>{
+export const userSignOut=()=>{
     return{
         type:constants.SIGN_OUT,
         payload:{}
@@ -69,5 +69,19 @@ export const signUp=(credentials)=>{
                 else
                     dispatch(userError(err.message));
             })
+    }
+}
+
+export const signOut=()=>{
+    return dispatch=>{
+        axios.get(`${URL}/users/logout/`,{withCredentials:true
+        })
+        .then(resp=>{
+            console.log(resp.data);
+            dispatch(userSignOut());
+        }).catch(err=>
+            {console.log(err)
+            dispatch(userError(err.message))
+        })
     }
 }

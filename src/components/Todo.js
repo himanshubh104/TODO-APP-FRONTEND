@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from '../redux/Action';
 import { toast } from "react-toastify";
 import { URL } from './AppConstants';
@@ -20,6 +20,7 @@ function Todo() {
     const history=useHistory();
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch()
+    const auth = useSelector(state=>state.authenticated)
     //Add a new Todo
     const handleSubmit=(e)=>{
         e.preventDefault();
@@ -91,16 +92,15 @@ function Todo() {
     //Signing Out
     const signout=(e)=>{
         setLoading(true)
-        axios.get(`${URL}/users/logout/`,{withCredentials:true
-        })
-        .then(resp=>{
-            console.log(resp.data);
-            setLoading(true)
-            dispatch(signOut());
-            history.replace('/login');
-        }).catch(err=>{console.log(err)
-            setLoading(false)})
-    }   
+        dispatch(signOut())
+    } 
+
+    useEffect(()=>{
+        if (!auth) {
+            setLoading(false)
+            history.replace('/login')
+        }
+    },[auth,history])
     
     return (
             <React.Fragment>
