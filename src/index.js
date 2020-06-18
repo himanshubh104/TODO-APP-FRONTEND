@@ -6,16 +6,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Provider } from "react-redux";
 import { AuthStore } from "./redux/UserStore";
-import { CookiesProvider } from "react-cookie";
 
 ReactDOM.render(
-  <CookiesProvider>
-    <Provider store={AuthStore}> 
+  <Provider store={AuthStore}> 
       <Router>
         <App />
       </Router>
-    </Provider>
-  </CookiesProvider>,
+    </Provider>,
   document.getElementById('root')
 );
 

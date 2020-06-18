@@ -107,7 +107,7 @@ function Todo() {
             <form onSubmit={handleSubmit}>
                 <div className="form-group row justify-content-center">
                     <div className="col-sm-10">
-                        <input type="text" className="form-control" required name="todoBody" placeholder="Wahat is in your mind"
+                        <input type="text" className="form-control" required name="todoBody" placeholder="What todo next?"
                         onChange={setTodoData}
                         value={todo.todoBody}/>
                     </div>
