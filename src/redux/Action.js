@@ -1,6 +1,7 @@
 import * as constants from "./Constants";
 import axios from "axios";
 import { URL } from "../components/AppConstants";
+import Cookies from 'js-cookie'
 
 const userSignIn=(user)=>{
     return{
@@ -23,8 +24,24 @@ const userError=(error)=>{
         payload:error
     }
 }
+export const checkAlreadySignin=()=>{
+    return dispatch=>{
+        if (Cookies.get('auth-token')!==undefined) {
+            dispatch({
+                type:constants.CHECK_SIGN_IN,
+                payload:true
+            })
+        }
+    }
+}
 
-export const userSignOut=()=>{
+export const userSignOut=()=>{  
+    Object.keys(Cookies.get()).forEach(cookieName=> {
+        var neededAttributes = {
+            path:'/'
+        };
+        Cookies.remove(cookieName, neededAttributes);
+      });
     return{
         type:constants.SIGN_OUT,
         payload:{}

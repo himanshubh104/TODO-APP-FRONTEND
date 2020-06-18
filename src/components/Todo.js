@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signOut } from '../redux/Action';
+import { signOut, userSignOut } from '../redux/Action';
 import { toast } from "react-toastify";
 import { URL } from './AppConstants';
 
@@ -40,17 +40,17 @@ function Todo() {
     useEffect(() => {
         axios.get(`${URL}/todos/`,{withCredentials:true
             }).then(resp=>{      
-                setTodos(resp.data);
+                setTodos(resp.data);                
                 // setLoading(false)
                 }).catch(err=>{
                     // setLoading(false)
                     // console.log(err.response)
-                    toast.error(err.message)
+                    toast.error('Something went wrong!')
                      if (err.response!==undefined && err.response.data.code===500) {
-                        history.replace('/login') 
+                        dispatch(userSignOut())
                     }                                
                 })  
-    }, [flag,history])
+    }, [flag,dispatch])
 
     const setTodoData=(e)=>{
         setTodo({...todo,[e.target.name]:e.target.value});

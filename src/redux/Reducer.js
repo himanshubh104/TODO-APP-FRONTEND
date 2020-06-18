@@ -15,6 +15,8 @@ export const userReducer=(state=initialState,action)=>{
             return {...state,authenticated:false, user:action.payload};
         case constants.ERROR:
             return{...state, error:action.payload}
+        case constants.CHECK_SIGN_IN:
+            return{...state, authenticated:action.payload}
         default:
             return state;
     }

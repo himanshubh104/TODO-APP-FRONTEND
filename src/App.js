@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import './App.css';
 import Login from './components/Login';
 import Todo from './components/Todo';
@@ -6,8 +6,13 @@ import {Switch,Route, Redirect} from 'react-router-dom';
 import Signup from "./components/Signup";
 import { ToastContainer } from "react-toastify";
 import { connect } from "react-redux";
+import { checkAlreadySignin } from "./redux/Action";
 
-const App=({auth})=>{
+const App=({auth,dispatch})=>{
+
+    useEffect(() => {
+        dispatch(checkAlreadySignin())
+    }, [dispatch])
     return(
         <React.Fragment>
             <ToastContainer autoClose={false} position='bottom-right'/> 
@@ -32,4 +37,7 @@ const App=({auth})=>{
 const mapStateToProps=state=>({
     auth:state.authenticated
 });
-export default connect(mapStateToProps,null)(App);
+const mapDispatchToProps=dispatch=>({
+    dispatch:dispatch
+});
+export default connect(mapStateToProps,mapDispatchToProps)(App);
