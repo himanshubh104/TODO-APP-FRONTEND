@@ -2,6 +2,7 @@ import React,{useState, useEffect} from 'react'
 import { useSelector,useDispatch } from "react-redux";
 import { signUp } from '../redux/Action';
 import { toast } from "react-toastify";
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -13,6 +14,7 @@ function Signup() {
     const [credentials, setCredentials] = useState({userName:'',userPassword:''});
     const response = useSelector(state=>state)
     const dispatcher=useDispatch();
+    const history=useHistory();
 
     const handleSubmit=(e)=>{
         e.preventDefault();
@@ -33,13 +35,14 @@ function Signup() {
     useEffect(()=>{
         if (Object.keys(response.user).length!==0){
             setLoading(false);
+            history.replace('/todo');
         }
         else if (response.error!=='') {
             console.log(response.error);
             toast.error(response.error)
             setLoading(false);
         }
-    },[response])
+    },[response,history])
     return (
         <div>
               
