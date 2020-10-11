@@ -48,11 +48,12 @@ export const userSignOut=()=>{
     }
 }
 export const signIn=(credentials)=>{
+    const token = Buffer.from(`${credentials.userName}:${credentials.userPassword}`, 'utf8').toString('base64')
     return dispatch=>{
-        axios.post(`${URL}/users/`,credentials,{withCredentials:true
-            })
+        axios.get(`${URL}/users/login`,{headers: {'Authorization': `Basic ${token}`}})
             .then(resp=>{
                 if (resp.data.authenticated) {
+                    Cookies.set('auth-token',true);
                     dispatch(userSignIn(resp.data));
                 }
                 else
@@ -70,8 +71,7 @@ export const signIn=(credentials)=>{
 
 export const signUp=(credentials)=>{
     return dispatch=>{
-        axios.post(`${URL}/users/create`,credentials,{withCredentials:true
-            })
+        axios.post(`${URL}/users/create`,credentials)
             .then(resp=>{
                 if (resp.data.authenticated) {
                     dispatch(userSignUp(resp.data));

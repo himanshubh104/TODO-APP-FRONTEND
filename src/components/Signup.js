@@ -35,7 +35,7 @@ function Signup() {
     useEffect(()=>{
         if (Object.keys(response.user).length!==0){
             setLoading(false);
-            history.replace('/todo');
+            history.replace('/login');
         }
         else if (response.error!=='') {
             console.log(response.error);

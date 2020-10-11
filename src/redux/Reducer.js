@@ -10,7 +10,7 @@ export const userReducer=(state=initialState,action)=>{
         case constants.SIGN_IN: 
             return{...state,authenticated:true, user:action.payload}
         case constants.SIGN_UP:
-            return{...state,authenticated:true, user:action.payload}
+            return{...state,authenticated:false, user:action.payload}
         case constants.SIGN_OUT:            
             return {...state,authenticated:false, user:action.payload};
         case constants.ERROR:
