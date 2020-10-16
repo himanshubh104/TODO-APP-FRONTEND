@@ -1,7 +1,8 @@
 import * as constants from "./Constants";
 import axios from "axios";
 import { URL } from "../components/AppConstants";
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
+import {authHeader} from '../components/AuthHeader';
 
 const userSignIn=(user)=>{
     return{
@@ -26,7 +27,7 @@ const userError=(error)=>{
 }
 export const checkAlreadySignin=()=>{
     return dispatch=>{
-        if (Cookies.get('auth-token')!==undefined) {
+        if (localStorage.getItem('auth-user')!==undefined) {
             dispatch({
                 type:constants.CHECK_SIGN_IN,
                 payload:true
@@ -36,24 +37,28 @@ export const checkAlreadySignin=()=>{
 }
 
 export const userSignOut=()=>{  
-    Object.keys(Cookies.get()).forEach(cookieName=> {
-        var neededAttributes = {
-            path:'/'
-        };
-        Cookies.remove(cookieName, neededAttributes);
-      });
+    // Object.keys(Cookies.get()).forEach(cookieName=> {
+    //     var neededAttributes = {
+    //         path:'/'
+    //     };
+    //     Cookies.remove(cookieName, neededAttributes);
+    //   });
+      localStorage.clear();
     return{
         type:constants.SIGN_OUT,
         payload:{}
     }
 }
 export const signIn=(credentials)=>{
-    const token = Buffer.from(`${credentials.userName}:${credentials.userPassword}`, 'utf8').toString('base64')
+    // const token = Buffer.from(`${credentials.userName}:${credentials.userPassword}`, 'utf8').toString('base64')
+    //axios.get(`${URL}/users/login`,{headers: {'Authorization': `Basic ${token}`}})
     return dispatch=>{
-        axios.get(`${URL}/users/login`,{headers: {'Authorization': `Basic ${token}`}})
+        axios.post(`${URL}/users/login`,credentials)
             .then(resp=>{
                 if (resp.data.authenticated) {
-                    Cookies.set('auth-token',true);
+                    // Cookies.set('auth-token',true);
+                    // Cookies.set('Authorization',true);
+                    localStorage.setItem('auth-user',JSON.stringify(resp.data));
                     dispatch(userSignIn(resp.data));
                 }
                 else
@@ -71,7 +76,7 @@ export const signIn=(credentials)=>{
 
 export const signUp=(credentials)=>{
     return dispatch=>{
-        axios.post(`${URL}/users/create`,credentials)
+        axios.post(`${URL}/users/create`)
             .then(resp=>{
                 if (resp.data.authenticated) {
                     dispatch(userSignUp(resp.data));
@@ -91,8 +96,7 @@ export const signUp=(credentials)=>{
 
 export const signOut=()=>{
     return dispatch=>{
-        axios.get(`${URL}/users/logout/`,{withCredentials:true
-        })
+        axios.get(`${URL}/users/logout/`,{ headers: authHeader() })
         .then(resp=>{
             console.log(resp.data);
             dispatch(userSignOut());

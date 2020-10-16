@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signOut, userSignOut } from '../redux/Action';
 import { toast } from "react-toastify";
 import { URL } from './AppConstants';
+import {authHeader} from './AuthHeader'
 
 function Todo() {
     const [todo, setTodo] = useState(
@@ -25,9 +26,7 @@ function Todo() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // setLoading(true)
-        axios.post(`${URL}/todos/`, todo, {
-            withCredentials: true
-        }).then(resp => {
+        axios.post(`${URL}/todos/`, todo, { headers: authHeader() }).then(resp => {
             console.log(resp.data);
             setFlag(oldf => oldf + 1);
         }).catch(err => {
@@ -39,9 +38,7 @@ function Todo() {
 
     //Fetching list Of Todos
     useEffect(() => {
-        axios.get(`${URL}/todos/`, {
-            withCredentials: true
-        }).then(resp => {
+        axios.get(`${URL}/todos/`, { headers: authHeader() }).then(resp => {
             setTodos(resp.data);            
             // setLoading(false)
         }).catch(err => {
@@ -64,9 +61,7 @@ function Todo() {
         for (const obj of todos) {
             if (e.target.name === obj.todoId + '') {
                 obj.done = obj.done ? false : true;
-                axios.put(`${URL}/todos/`, obj, {
-                    withCredentials: true
-                }).then(resp => {
+                axios.put(`${URL}/todos/`, obj, { headers: authHeader() }).then(resp => {
                     setFlag(flag => flag + 1);
                     return;
                 }).catch(err => {
@@ -82,9 +77,7 @@ function Todo() {
     //Deleting Done Todos
     const deleteTodos = (e) => {
         // setLoading(true)
-        axios.delete(`${URL}/todos/`, {
-            withCredentials: true
-        }).then(resp => {
+        axios.delete(`${URL}/todos/`, { headers: authHeader() }).then(resp => {
             setFlag(flag => flag + 1);
         }).catch(err => {
             setLoading(false)
