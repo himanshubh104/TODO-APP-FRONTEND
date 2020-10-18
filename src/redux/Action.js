@@ -27,7 +27,8 @@ const userError=(error)=>{
 }
 export const checkAlreadySignin=()=>{
     return dispatch=>{
-        if (localStorage.getItem('auth-user')!==undefined) {
+        // console.log(localStorage.getItem('auth-user'));
+        if (localStorage.getItem('auth-user')!==null) {
             dispatch({
                 type:constants.CHECK_SIGN_IN,
                 payload:true
