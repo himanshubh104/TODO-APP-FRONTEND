@@ -44,8 +44,9 @@ function Todo() {
         }).catch(err => {
             // setLoading(false)
             // console.log(err.response)
-            toast.error('Something went wrong!')
-            if (err.response !== undefined && err.response.data.code === 500) {
+            toast.error('Something went wrong!');
+            // console.log(err.response);
+            if (err.response === undefined || err.response.data.code === 500) {
                 dispatch(userSignOut())
             }
         })
